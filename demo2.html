@@ -1,0 +1,210 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Flash Like Demo</title>
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+</head>
+<body>
+	<div id="wrap">
+		<div id="flashlike">
+			<img src="images/01.jpg" alt="">
+		</div>
+		<a href="javascript:;" id="skip-btn"><img src="images/skip.png" alt="" class="png"></a>
+		<a href="javascript:;" id="replay-btn" style="display: none;"><img src="images/replay.png" alt="" class="png"></a>
+	</div>
+<script src="js/jquery.js"></script>
+<!--[if IE 6]>
+	<script type="text/javascript" src="js/DD_belatedPNG.js"></script>
+	<script>
+		DD_belatedPNG.fix('.png');
+	</script>
+<![endif]-->
+<script src="js/jquery.easing.js"></script>
+<script src="js/flashlike.min.js"></script>
+<script src="js/fl-data-demo2.js"></script>
+<script>
+var scenes = [
+	{
+		url: "images/demo2/01.jpg",
+		fadeIn: 1000,
+		fadeOut: 700,
+		top: 162,
+		left: 119,
+		wait: 2000,
+		live: 2,
+		callback: function(img) {
+			img.animate({
+				top: 60
+			},800,"swing");
+		}
+	},
+	{
+		url: "images/demo2/02.jpg",
+		fadeIn: 1000,
+		fadeOut: 700,
+		left: 145,
+		top: 150,
+		wait: 1000,
+		live: 1
+	},
+	{
+		url: "images/demo2/03.jpg",
+		fadeIn: 1000,
+		fadeOut: 700,
+		top: 200,
+		left: 230,
+		animate: {
+			param: {
+				top: 220
+			},
+			time: 1000,
+			easing: "easeOutBounce"
+		},
+		wait: 3000
+	},
+	{
+		url: "images/demo2/04.jpg",
+		fadeIn: 1000,
+		fadeOut: 700,
+		top: 150,
+		left: 70,
+		wait: 2000
+	},
+	{
+		url: "images/demo2/05.jpg",
+		fadeIn: 1000,
+		fadeOut: 3000,
+		wait: 2000
+	},
+	{
+		url: "images/demo2/06.jpg",
+		fadeIn: 1000,
+		wait: 2000,
+		fadeOut: 1000
+	},
+	{
+		url: "images/demo2/07.jpg",
+		fadeIn: 1000,
+		wait: 200,
+		top: 168,
+		left: 125,
+		live: 11
+	},
+	{
+		url: "images/demo2/08.jpg",
+		fadeIn: 1000,
+		wait: 0,
+		top: 168,
+		left: 160,
+		live: 10
+	},
+	{
+		url: "images/demo2/09.jpg",
+		fadeIn: 1000,
+		wait: 0,
+		top: 168,
+		left: 180,
+		live: 9
+	},
+	{
+		url: "images/demo2/10.jpg",
+		fadeIn: 1000,
+		wait: 0,
+		top: 168,
+		left: 216,
+		live: 8
+	},
+	{
+		url: "images/demo2/11.jpg",
+		fadeIn: 1000,
+		wait: 0,
+		top: 168,
+		left: 244,
+		live: 7
+	},
+	{
+		url: "images/demo2/12.jpg",
+		fadeIn: 1000,
+		wait: 0,
+		top: 168,
+		left: 282,
+		live: 6
+	},
+	{
+		url: "images/demo2/13.jpg",
+		fadeIn: 1000,
+		wait: 0,
+		top: 168,
+		left: 320,
+		live: 5
+	},
+	{
+		url: "images/demo2/14.jpg",
+		fadeIn: 1000,
+		wait: 100,
+		top: 168,
+		left: 340,
+		live: 4
+	},
+	{
+		url: "images/demo2/15.jpg",
+		fadeIn: 1000,
+		wait: 100,
+		top: 168,
+		left: 376,
+		live: 3
+	},
+	{
+		url: "images/demo2/16.jpg",
+		fadeIn: 1000,
+		wait: 100,
+		top: 168,
+		left: 422,
+		live: 2
+	},
+	{
+		url: "images/demo2/17.jpg",
+		fadeIn: 1000,
+		wait: 100,
+		top: 168,
+		left: 447,
+		live: 1
+	},
+	{
+		url: "images/demo2/18.jpg",
+		fadeIn: 1000,
+		wait: 1000,
+		top: 208,
+		left: 414
+	},
+	{
+		url: "images/demo2/01.jpg",
+		fadeIn: 0,
+		wait: 100,
+		top: 162,
+		left: 119
+	}
+];
+var setting = {
+	width: 600,
+	height: 400
+};
+var flashlike = new FlashLike(scenes,setting);
+
+jQuery("#skip-btn").click(function() {
+	flashlike.skip();
+});
+jQuery("#replay-btn").click(function() {
+	flashlike.replay();
+	jQuery("#skip-btn").show();
+	jQuery("#replay-btn").hide();
+});
+jQuery(flashlike).bind(FlashLikeEvent.FINISH,function() {
+	jQuery("#skip-btn").hide();
+	jQuery("#replay-btn").show();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Flash Like Demo</title>
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+</head>
+<body>
+	<div id="wrap">
+		<div id="flashlike">
+			<img src="images/default.jpg" alt="">
+		</div>
+	</div>
+<script src="js/jquery.js"></script>
+<script src="js/flashlike.min.js"></script>
+<script src="js/fl-data-demo1.js"></script>
+<script>
+	var scenes = [
+	{
+		url: "images/demo1/01.jpg",
+		fadeIn: 1000,
+		fadeOut: 3000,
+		wait: 4000
+	},
+	{
+		url: "images/demo1/02.jpg",
+		fadeIn: 1000,
+		fadeOut: 3000,
+		wait: 4000
+	},
+	{
+		url: "images/demo1/03.jpg",
+		fadeIn: 1000,
+		fadeOut: 3000,
+		wait: 4000
+	},
+	{
+		url: "images/demo1/04.jpg",
+		fadeIn: 1000,
+		fadeOut: 3000,
+		wait: 4000
+	},
+	{
+		url: "images/demo1/05.jpg",
+		fadeIn: 1000,
+		fadeOut: 3000,
+		wait: 4000
+	},
+	{
+		url: "images/demo1/06.jpg",
+		fadeIn: 1000,
+		fadeOut: 3000,
+		wait: 4000
+	},
+	{
+		url: "images/demo1/07.jpg",
+		fadeIn: 1000,
+		fadeOut: 3000,
+		wait: 4000
+	}
+];
+var setting = {
+	width: 600,
+	height: 400,
+	loop:true
+};
+var flashlike = new FlashLike(scenes,setting);
+</script>
+</body>
+</html>
