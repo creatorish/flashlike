@@ -17,9 +17,9 @@ if(jQuery.browser.msie && parseInt(jQuery.browser.version) == 6){
  *
  * Flash Like JS
  *
- * version: 1.1
+ * version: 1.2
  * required: jQuery
- * lastupdate: 2011.10.18
+ * lastupdate: 2011.11.20
  * author: y.hayashi
  * website: http://creatorish.com
  * pluginURL: http://creatorish.com/flashlike-js
@@ -255,6 +255,13 @@ FlashLike.prototype = {
 		}
 		
 		this.reserver.addReserve(life,this.index);
+		
+		if (currentScene.top) {
+			img.css("top",currentScene.top);
+		}
+		if (currentScene.left) {
+			img.css("left",currentScene.left);
+		}
 		
 		if (currentScene.animate) {
 			var easing = "swing";
