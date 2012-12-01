@@ -369,27 +369,29 @@ FlashLike.prototype = {
 		
 		var rs = this.reserver.getAllReserve();
 		for (var key in rs) {
+			if (key >= this.scene.length-2) {
+				continue;
+			}
 			var target = rs[key];
 			for (var i = 0 ; i < target.length; i++) {
-				var scene = this.getScene(target[i]);
-				scene.image.remove();
-				this.resetScene(target[i]);
+				if (target[i] < this.scene.length-2) {
+					var scene = this.getScene(target[i]);
+					scene.image.remove();
+					this.resetScene(target[i]);
+				}
 			}
 			this.reserver.removeReserve(key);
 		}
-		
-		this.reserver.removeAllReserve();
 	},
 	replay: function() {
+		this.index = this.setting.scene-1;
 		this.clear();
 		this.container.html("");
-		this.index = this.setting.scene-1;
 		this.next();
 	},
 	skip: function() {
-		this.clear();
-		this.container.html("");
 		this.index = this.scene.length-2;
+		this.clear();
 		this.next();
 	},
 	goTo: function(index) {
