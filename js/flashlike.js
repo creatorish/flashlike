@@ -250,7 +250,7 @@ FlashLike.prototype = {
 			life += currentScene.live;
 		}
 		
-		if (life >= this.scene.length) {
+		if (life > this.scene.length) {
 			life = 1;
 		}
 		
