@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Flash Like Demo</title>
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+</head>
+<body>
+	<div id="wrap">
+		<div id="flashlike">
+			<img src="images/01.jpg" alt="">
+		</div>
+	</div>
+<script src="js/jquery.js"></script>
+<!--[if IE 6]>
+	<script type="text/javascript" src="js/DD_belatedPNG.js"></script>
+	<script>
+		DD_belatedPNG.fix('.png');
+	</script>
+<![endif]-->
+<script src="js/jquery.easing.js"></script>
+<script src="js/flashlike.min.js"></script>
+<script src="js/fl-data-demo2.js"></script>
+<script>
+var scenes = [
+	{
+		url: "images/demo2/01.jpg",
+		fadeIn: 1000,
+		fadeOut: 700,
+		top: 162,
+		left: 119,
+		zIndex: 3,
+		wait: 2000,
+		live: 2,
+	},
+	{
+		url: "images/demo2/05.jpg",
+		fadeIn: 1000,
+		fadeOut: 700,
+		left: 0,
+		top: 0,
+		live: 1,
+		wait: 3000
+		//ここでのzIndexは1
+	},
+	{
+		url: "images/demo2/06.jpg",
+		fadeIn: 1000,
+		fadeOut: 700,
+		left: 0,
+		top: 0
+		//ここでのzIndexは1
+	}
+];
+var setting = {
+	width: 600,
+	height: 400
+};
+var flashlike = new FlashLike(scenes,setting);
+</script>
+</body>
+</html>

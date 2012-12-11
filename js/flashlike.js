@@ -17,9 +17,9 @@ if(jQuery.browser.msie && parseInt(jQuery.browser.version) == 6){
  *
  * Flash Like JS
  *
- * version: 1.2
+ * version: 1.3
  * required: jQuery
- * lastupdate: 2011.11.20
+ * lastupdate: 2012.12.11
  * author: y.hayashi
  * website: http://creatorish.com
  * pluginURL: http://creatorish.com/flashlike-js
@@ -85,9 +85,20 @@ var FlashLike = function(scene,setting) {
 		debug: false,
 		loop: false
 	};
+	this.option = {
+		top: 0,
+		left: 0,
+		zIndex: null,
+		link: null,
+		target: null,
+		onclick: null,
+		id: null
+	};
+	
 	jQuery.extend(this.setting,setting);
 	
 	this.scene = scene;
+	this.loadedCount = 0;
 	this.images = [];
 	this.index = this.setting.scene-1;
 	this.timer = null;
@@ -145,19 +156,43 @@ FlashLike.prototype = {
 		this.preload();
 	},
 	preload: function() {
-		var img = new Image();
-		jQuery(img).load(this.loadedHandler).error(function () {
-			alert("load error:" + jQuery(this).attr("src"));
-		}).attr('src', this.scene[this.images.length].url);
+		var s = this.scene[this.loadedCount];
+		if (s.url) {
+			var img = new Image();
+			jQuery(img).load(this.loadedHandler).error(function () {
+				alert("load error:" + jQuery(this).attr("src"));
+			}).attr('src', s.url);
+		} else {
+			s.data = this.createSceneData(this.loadedCount,s.html,{
+				top: s.top,
+				left: s.left,
+				zIndex: s.zIndex,
+				id: s.id,
+				link: s.link,
+				target: s.target,
+				onclick: s.onclick
+			});
+			this.loadedCount++;
+			this.preload();
+		}
 	},
 	loaded: function(img) {
-		this.images.push(img);
+		this.images[this.loadedCount] = img;
 		
-		var scene = this.getScene(this.images.length-1);
+		var scene = this.getScene(this.loadedCount);
 		scene.src = img.src;
-		scene.image = this.createImage(img,scene.top,scene.left,scene.zIndex);
+		scene.data = this.createSceneData(this.loadedCount,img,{
+			top: scene.top,
+			left: scene.left,
+			zIndex: scene.zIndex,
+			id: scene.id,
+			link: scene.link,
+			target: scene.target,
+			onclick: scene.onclick
+		});
 		
-		if (this.images.length === this.scene.length) {
+		++this.loadedCount;
+		if (this.loadedCount === this.scene.length) {
 			this.start();
 		} else {
 			this.preload();
@@ -183,32 +218,47 @@ FlashLike.prototype = {
 	getImage: function(index) {
 		return this.images[index];
 	},
-	createImage: function(image,top,left,zIndex) {
-		if (!top) {
-			top = 0;
+	createSceneData: function(index,image,option) {
+		var op = {};
+		jQuery.extend(op,this.option,option);
+		
+		if (!op.zIndex) {
+			op.zIndex = index;
 		}
-		if (!left) {
-			left = 0;
-		}
-		if (!zIndex) {
-			zIndex = this.images.length-1;
+		var img;
+		if (op.link) {
+			img = jQuery("<a>");
+			img.attr("href",op.link);
+			if (op.target) {
+				img.attr("target",op.target);
+			}
+			if (op.id) {
+				img.attr("id",op.id);
+			}
+			if (op.onclick) {
+				img.attr("onclick",op.onclick);
+			}
 		} else {
-			zIndex = this.images.length-1 + zIndex;
+			img = jQuery("<div>");
 		}
-		var img = jQuery("<div>");
 		img.css({
 			position: "absolute",
-			top: top,
-			left: left,
+			top: op.top,
+			left: op.left,
 			display: "none",
-			zIndex: zIndex,
-			width: image.width,
-			height: image.height,
-			backgroundImage: "url("+image.src+")",
-			backgroundRepeat: "no-repeat",
-			backgroundPosition: "0 0"
+			zIndex: op.zIndex
 		});
-		
+		if (image.tagName && image.tagName === "IMG") {
+			img.css({
+				width: image.width,
+				height: image.height,
+				backgroundImage: "url("+image.src+")",
+				backgroundRepeat: "no-repeat",
+				backgroundPosition: "0 0"
+			});
+		} else {
+			img.append(image);
+		}
 		return img;
 	},
 	next: function() {
@@ -221,16 +271,16 @@ FlashLike.prototype = {
 		++this.index;
 		
 		var currentScene = this.getCurrentScene();
-		var img = currentScene.image;
-		this.container.append(img);
+		var data = currentScene.data;
+		this.container.append(data);
 		
-		if(img.css('backgroundImage').indexOf('.png') != -1) {
+		if(data.css('backgroundImage').indexOf('.png') != -1) {
 			if(jQuery.browser.msie && parseInt(jQuery.browser.version) == 6){
 				if (typeof(DD_belatedPNG) === "object") {
-					DD_belatedPNG.fixPng(img.get(0));
+					DD_belatedPNG.fixPng(data.get(0));
 				}
 			} else if(jQuery.browser.msie){
-				img.css({
+				data.css({
 					'backgroundImage': 'none',
 					'filter': 'progid:DXImageTransform.Microsoft.AlphaImageLoader(src="'+currentScene.src+'", sizingMethod="image");'
 				});
@@ -239,10 +289,10 @@ FlashLike.prototype = {
 		
 		var time = currentScene.fadeIn;
 		if (time) {
-			img.fadeIn(time);
+			data.fadeIn(time);
 		} else {
 			time = 0;
-			img.show();
+			data.show();
 		}
 		
 		var life = this.index+1;
@@ -257,10 +307,10 @@ FlashLike.prototype = {
 		this.reserver.addReserve(life,this.index);
 		
 		if (currentScene.top) {
-			img.css("top",currentScene.top);
+			data.css("top",currentScene.top);
 		}
 		if (currentScene.left) {
-			img.css("left",currentScene.left);
+			data.css("left",currentScene.left);
 		}
 		
 		if (currentScene.animate) {
@@ -271,7 +321,7 @@ FlashLike.prototype = {
 			}
 			var callback = null;
 			if (currentScene.animate.callback) {
-				easing = currentScene.animate.callback;
+				callback = currentScene.animate.callback;
 			}
 			
 			if (currentScene.animate.delay > 0) {
@@ -280,7 +330,7 @@ FlashLike.prototype = {
 			currentScene.animate.param.opacity = 1;
 			
 			window.setTimeout(function() {
-				img.stop().animate(currentScene.animate.param,currentScene.animate.time,easing,callback);
+				data.stop().animate(currentScene.animate.param,currentScene.animate.time,easing,callback);
 			},delay);
 		}
 		this.checkLiveImage();
@@ -292,7 +342,7 @@ FlashLike.prototype = {
 		var currentScene = this.getCurrentScene();
 		
 		if (currentScene.callback) {
-			currentScene.callback(currentScene.image);
+			currentScene.callback(currentScene.data);
 		}
 		
 		jQuery(this).trigger(FlashLikeEvent.CHANGE);
@@ -311,12 +361,12 @@ FlashLike.prototype = {
 				var id = target[i];
 				if (scene.fadeOut) {
 					var self = this;
-					scene.image.fadeOut(scene.fadeOut,function() {
+					scene.data.fadeOut(scene.fadeOut,function() {
 						jQuery(this).remove();
 						self.resetScene(id);
 					});
 				} else {
-					scene.image.remove();
+					scene.data.remove();
 					this.resetScene(target[i]);
 				}
 				this.console("remove:"+target[i]);
@@ -356,7 +406,7 @@ FlashLike.prototype = {
 			zIndex += scene.zIndex;
 		}
 		
-		scene.image.css({
+		scene.data.css({
 			position: "absolute",
 			top: top,
 			left: left,
@@ -376,7 +426,7 @@ FlashLike.prototype = {
 			for (var i = 0 ; i < target.length; i++) {
 				if (target[i] < this.scene.length-2) {
 					var scene = this.getScene(target[i]);
-					scene.image.remove();
+					scene.data.remove();
 					this.resetScene(target[i]);
 				}
 			}
